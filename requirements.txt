@@ -1,0 +1,6 @@
+streamlit
+numpay
+pandas
+pillow
+joblib
+matplotib
