@@ -1,6 +1,6 @@
 streamlit
 joblib
-numpay
+numpy
 pandas
 pillow
 matplotib
