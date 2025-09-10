@@ -146,33 +146,42 @@ def login_ui() -> bool:
 # =======================
 @st.cache_data(show_spinner=False)
 def load_data(path: str) -> pd.DataFrame:
-    """Load and preprocess housing data with error handling"""
+    """Load and preprocess housing data with error handling."""
+    if not os.path.exists(path):
+        st.error(f"❌ Data file not found: {path}")
+        st.stop()
+
     try:
         df = pd.read_csv(path)
-        df.columns = df.columns.str.strip().str.lower().str.replace(" ", "_")
-        
+        df.columns = (
+            df.columns.str.strip()
+            .str.lower()
+            .str.replace(" ", "_")
+        )
+
         if "price" not in df.columns:
-            st.error("Required 'price' column not found in dataset")
+            st.error("❌ Required 'price' column not found in dataset.")
             st.stop()
-            
+
         return df
-    except FileNotFoundError:
-        st.error(f"Data file not found: {path}")
-        st.stop()
+
     except Exception as e:
-        st.error(f"Error loading data: {e}")
+        st.error(f"❌ Error loading data: {e}")
         st.stop()
+
 
 @st.cache_resource(show_spinner=False)
 def load_model(path: str):
-    """Load trained model with error handling"""
-    try:
-        return joblib.load(path)
-    except FileNotFoundError:
-        st.error(f"Model file not found: {path}")
+    """Load trained model from file in repo with error handling."""
+    if not os.path.exists(path):
+        st.error(f"❌ Model file not found: {path}")
         st.stop()
+
+    try:
+        model = joblib.load(path)
+        return model
     except Exception as e:
-        st.error(f"Error loading model: {e}")
+        st.error(f"❌ Error loading model: {e}")
         st.stop()
 
 # =======================
@@ -678,4 +687,5 @@ def main() -> None:
         app_main(st.session_state.current_user, df, model)
 
 if __name__ == "__main__":
+
     main()
