@@ -4,3 +4,4 @@ pandas
 pillow
 joblib
 matplotib
+fpdf
